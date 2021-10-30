@@ -1,6 +1,7 @@
 import scrapy
 from scrapy.pipelines.images import ImagesPipeline
 from pymongo import MongoClient
+import csv
 
 
 class DataBasePipeline(object):
@@ -11,6 +12,28 @@ class DataBasePipeline(object):
     def process_item(self, item, spider):
         collection = self.mongo_base[spider.name]
         collection.insert_one(item)
+        return item
+
+
+class CSVPipeline(object):
+    def __init__(self):
+        self.file = f'./leroy_db.csv'
+        with open(self.file, 'r', newline='') as csv_file:
+            self.tmp_data = csv.DictReader(csv_file).fieldnames
+
+        self.csv_file = open(self.file, 'a', newline='', encoding='UTF-8')
+
+    def __del__(self):
+        self.csv_file.close()
+
+    def process_item(self, item, spider):
+        columns = item.fields.keys()
+
+        data = csv.DictWriter(self.csv_file, columns)
+        if not self.tmp_data:
+            data.writeheader()
+            self.tmp_data = True
+        data.writerow(item)
         return item
 
 

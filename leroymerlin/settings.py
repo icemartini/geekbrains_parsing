@@ -11,7 +11,8 @@ CONCURRENT_REQUESTS_PER_DOMAIN = 8
 CONCURRENT_REQUESTS_PER_IP = 8
 IMAGES_STORE = 'images'
 ITEM_PIPELINES = {
-   'leroymerlin.pipeline.DataBasePipeline': 300,
+   # 'leroymerlin.pipeline.DataBasePipeline': 300,
+   'leroymerlin.pipeline.CSVPipeline': 300,
    'leroymerlin.pipeline.LeroyPhotosPipeline': 200,
 }
 
